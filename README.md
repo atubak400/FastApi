@@ -76,7 +76,7 @@ This code:
 1. Creates a FastAPI app instance.
 2. Defines a route at `/` that returns a JSON response `{"message": "Hello World"}`.
 
-> Screenshot: [main.py Code](./2.png)
+> Screenshot: [main.py Code](./img/2.png)
 
 ---
 
