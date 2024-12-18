@@ -24,7 +24,7 @@ Activate the virtual environment:
   venv\Scripts\activate
   ```
 
-> Screenshot: [Terminal with environment setup](./1.png)
+> Screenshot: [Terminal with environment setup](./img/1.png)
 
 ---
 
@@ -42,7 +42,7 @@ This installs the required dependencies:
 - `fastapi` for API development
 - `uvicorn` for running the API server
 
-> Screenshot: [Dependencies Installation](./1.png)
+> Screenshot: [Dependencies Installation](./img/1.png)
 
 ---
 
@@ -97,7 +97,7 @@ uvicorn main:app --reload
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 ```
 
-> Screenshot: [Server Running](./3.png)
+> Screenshot: [Server Running](./img/3.png)
 
 ---
 
@@ -112,7 +112,7 @@ INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
    {"message": "Hello World"}
    ```
 
-> Screenshot: [API Response](./4.png)
+> Screenshot: [API Response](./img/4.png)
 
 ---
 
