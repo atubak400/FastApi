@@ -7,6 +7,7 @@ This document outlines the step-by-step process for setting up and running a bas
 ## 1. **Setup the Project Environment**
 
 ### Step 1.1: Create a Virtual Environment
+
 To ensure dependencies are managed cleanly, create a virtual environment.
 
 ```bash
@@ -29,6 +30,7 @@ Activate the virtual environment:
 ---
 
 ### Step 1.2: Install FastAPI and Uvicorn
+
 FastAPI is the framework, and **Uvicorn** serves as the ASGI server.
 
 Run the following commands:
@@ -39,6 +41,7 @@ pip install "uvicorn[standard]"
 ```
 
 This installs the required dependencies:
+
 - `fastapi` for API development
 - `uvicorn` for running the API server
 
@@ -49,7 +52,9 @@ This installs the required dependencies:
 ## 2. **Create the FastAPI App**
 
 ### Step 2.1: Project Structure
+
 The project structure is simple for this example:
+
 ```
 FastAPI
 │-- main.py          # The main FastAPI app file
@@ -60,6 +65,7 @@ FastAPI
 ```
 
 ### Step 2.2: Write the Code
+
 In the `main.py` file, write a simple FastAPI app that returns a JSON response:
 
 ```python
@@ -73,6 +79,7 @@ async def root():
 ```
 
 This code:
+
 1. Creates a FastAPI app instance.
 2. Defines a route at `/` that returns a JSON response `{"message": "Hello World"}`.
 
@@ -93,6 +100,7 @@ uvicorn main:app --reload
 - `--reload` enables live reloading for development.
 
 **Output:**
+
 ```
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
 ```
@@ -109,26 +117,139 @@ INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
    ```
 2. You should see the JSON response:
    ```json
-   {"message": "Hello World"}
+   { "message": "Hello World" }
    ```
 
 > Screenshot: [API Response](./img/4.png)
 
 ---
 
-## 5. **Next Steps**
-To further develop this project:
-1. Add more routes (e.g., POST, PUT, DELETE).
-2. Integrate a database (SQLite, PostgreSQL, etc.).
-3. Add input validation using Pydantic models.
-4. Use Swagger UI (`/docs`) for API testing.
+## 5. **Add a /todos Route**
+
+### Step 5.1: Update the Code for a `/todos` Endpoint
+
+In `main.py`, add the following code to create a `GET` endpoint at `/todos`. This endpoint will return an empty list of todos for now.
+
+```python
+todos = []
+
+# Get all todos
+@app.get("/todos")
+async def get_todos():
+    return {"todos": todos}
+```
+
+This code:
+
+- Initializes an empty list named `todos`.
+- Defines a new route `/todos` that returns the current list of todos in JSON format.
+
+> Screenshot: [Updated main.py](./img/5.png)
 
 ---
 
-## Conclusion
-You have successfully set up and run a basic FastAPI application. This process covered:
-- Creating a virtual environment.
-- Installing FastAPI and Uvicorn.
-- Writing and running a basic API endpoint.
+### Step 5.2: Test the `/todos` Route
 
-For further learning, refer to the official [FastAPI documentation](https://fastapi.tiangolo.com).
+Run the FastAPI server again if it's not already running:
+
+```bash
+uvicorn main:app --reload
+```
+
+Visit the following URL:
+
+```
+http://127.0.0.1:8000/todos
+```
+
+**Output:**
+
+```json
+{ "todos": [] }
+```
+
+This confirms that the `/todos` route is working correctly and returning an empty list.
+
+> Screenshot: [Response for /todos](./img/6.png)
+
+---
+
+## 6. **Add a Pydantic Model for Todo Items**
+
+### Step 6.1: Create the Pydantic Model
+Create a new file `models.py` and define a `Todo` model using Pydantic.
+
+```python
+from pydantic import BaseModel
+
+# Pydantic model for a Todo item
+class Todo(BaseModel):
+    id: int
+    item: str
+```
+
+This model ensures validation and type enforcement for incoming `Todo` objects.
+
+> Screenshot: [Pydantic Model](/img/7.png)
+
+---
+
+### Step 6.2: Update `main.py` to Accept POST Requests
+In `main.py`, import the `Todo` model and add a `POST` endpoint for creating todos.
+
+```python
+from models import Todo
+
+# Create a todos
+@app.post("/todos")
+async def create_todos(todo: Todo):
+    todos.append(todo)
+    return {"message": "Todo has been added"}
+```
+
+This code:
+1. Adds a new `Todo` item to the `todos` list.
+2. Returns a confirmation message.
+
+> Screenshot: [Updated main.py with POST Endpoint](/img/8.png)
+
+---
+
+### Step 6.3: Test the POST `/todos` Route
+Using a tool like Postman or cURL, send a `POST` request with a JSON body:
+
+**Request:**
+```json
+{
+  "id": 1,
+  "item": "Edit a blog post"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Todo has been added"
+}
+```
+
+> Screenshot: [POST Request in Postman](/img/9.png)
+
+---
+
+### Step 6.4: Verify the New Todo Item
+Visit the `/todos` endpoint again to confirm the item was added.
+
+**Output:**
+```json
+{
+  "todos": [
+    {
+      "id": 1,
+      "item": "Edit a blog post"
+    }
+  ]
+}
+```
+
+> Screenshot: [Updated /Postman todos Response](./img/10.png) and [Updated /Browser todos Response](./img/11.png)
