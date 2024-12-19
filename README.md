@@ -1,3 +1,4 @@
+![FastApi](./img/0.avif)
 # FastAPI Project Documentation
 
 This document outlines the step-by-step process for setting up and running a basic **FastAPI** project. It serves as a reference for others who wish to replicate this setup.
@@ -253,3 +254,205 @@ Visit the `/todos` endpoint again to confirm the item was added.
 ```
 
 > Screenshot: [Updated /Postman todos Response](./img/10.png) and [Updated /Browser todos Response](./img/11.png)
+
+---
+
+## 7. **Retrieve a Single Todo**
+
+### Step 7.1: Add a GET Endpoint for a Single Todo
+Update `main.py` to include a route for retrieving a single todo by its ID:
+
+```python
+# Get single todo
+@app.get("/todos/{todo_id}")
+async def get_todo(todo_id: int):
+    for todo in todos:
+        if todo.id == todo_id:
+            return {"todo": todo}
+    return {"message": "No todos found"}
+```
+
+This code:
+1. Loops through the `todos` list to find the todo with the specified `id`.
+2. Returns the todo if found, or a message if not found.
+
+> Screenshot: [Updated main.py for Single Todo](./img/12.png)
+
+---
+
+### Step 7.2: Test the Single Todo Endpoint
+Using a tool like Postman or cURL, send a `GET` request to `/todos/{id}`:
+
+**Request:**
+```
+GET http://127.0.0.1:8000/todos/1
+```
+
+**Response:**
+```json
+{
+  "todo": {
+    "id": 1,
+    "item": "Edit a blog post"
+  }
+}
+```
+
+> Screenshot: [GET Single Todo in Postman](./img/13.png)
+
+
+---
+
+
+## 8. **Delete a Todo**
+
+### Step 8.1: Add a DELETE Endpoint
+Update `main.py` to include a route for deleting a todo by its ID:
+
+```python
+# Delete a todo
+@app.delete("/todos/{todo_id}")
+async def delete_todo(todo_id: int):
+    for todo in todos:
+        if todo.id == todo_id:
+            todos.remove(todo)
+            return {"message": "Todo has been DELETED!"}
+    return {"message": "No todos found"}
+```
+
+This code:
+1. Loops through the `todos` list to find the todo with the specified `id`.
+2. Deletes the todo if found, or returns a message if not found.
+
+> Screenshot: [Updated main.py for Delete Todo](./img/14.png)
+
+---
+
+### Step 8.2: Test the DELETE Endpoint
+Using a tool like Postman or cURL, send a `DELETE` request to `/todos/{id}`:
+
+**Request:**
+```
+DELETE http://127.0.0.1:8000/todos/1
+```
+
+**Response:**
+```json
+{
+  "message": "Todo has been DELETED!"
+}
+```
+
+> Screenshot: [DELETE Todo in Postman](./img/15.png)
+
+---
+
+### Step 8.3: Verify the Todo Has Been Deleted
+Visit the `/todos/{id}` endpoint again to confirm the item has been removed.
+
+**Request:**
+```
+GET http://127.0.0.1:8000/todos/1
+```
+
+**Response:**
+```json
+{
+  "message": "No todos found"
+}
+```
+
+> Screenshot: [GET after Delete](./img/16.png)
+
+---
+
+## 9. **Update a Todo**
+
+### Step 9.1: Add a PUT Endpoint for Updating a Todo
+Update `main.py` to include a route for updating a todo by its ID:
+
+```python
+# Update a todo
+@app.put("/todos/{todo_id}")
+async def update_todo(todo_id: int, todo_obj: Todo):
+    for todo in todos:
+        if todo.id == todo_id:
+            todo.id = todo_id
+            todo.item = todo_obj.item
+            return {"todo": todo}
+    return {"message": "No todos found to update"}
+```
+
+This code:
+1. Loops through the `todos` list to find the todo with the specified `id`.
+2. Updates the `item` field of the todo object.
+3. Returns the updated todo, or a message if not found.
+
+> Screenshot: [Updated main.py for Update Todo](./img/17.png)
+
+---
+
+### Step 9.2: Test the PUT Endpoint
+Using a tool like Postman or cURL, send a `PUT` request to `/todos/{id}` with the updated details:
+
+**Request:**
+```json
+{
+  "id": 1,
+  "item": "Updated a blog post"
+}
+```
+
+**Response:**
+```json
+{
+  "todo": {
+    "id": 1,
+    "item": "Updated a blog post"
+  }
+}
+```
+
+> Screenshot: [PUT Request in Postman](./img/18.png)
+
+---
+
+### Step 9.3: Verify the Updated Todo
+Visit the `/todos/{id}` endpoint again to confirm the item has been updated.
+
+**Request:**
+```
+GET http://127.0.0.1:8000/todos/1
+```
+
+**Response:**
+```json
+{
+  "todo": {
+    "id": 1,
+    "item": "Updated a blog post"
+  }
+}
+```
+
+> Screenshot: [GET after Update](./img/19.png)
+
+---
+
+## Conclusion
+
+In this project, we:
+- Set up a FastAPI environment using a virtual environment and installed the necessary dependencies.
+- Created a basic FastAPI application that returns JSON responses.
+- Added multiple endpoints (`GET`, `POST`, `PUT`, `DELETE`) to handle a todo list.
+- Validated input data using Pydantic models.
+- Tested all endpoints using Postman, ensuring proper functionality.
+
+### Future Improvements
+1. **Database Integration**: Persist todos in a database (e.g., SQLite, PostgreSQL) instead of using an in-memory list.
+2. **Authentication**: Add user authentication and authorization to secure endpoints.
+3. **Error Handling**: Implement custom error handling for more descriptive responses.
+4. **Frontend Integration**: Build a frontend (e.g., React or Vue.js) to interact with the FastAPI backend.
+5. **Deployment**: Deploy the API to a cloud provider (e.g., AWS, Heroku) for public access.
+
+This project serves as a foundation for building more complex applications with FastAPI.
